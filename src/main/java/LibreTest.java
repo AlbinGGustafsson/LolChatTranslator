@@ -1,3 +1,6 @@
+//TODO
+//Kanske testar att använda denna translate tjänst istället
+
 //import java.io.OutputStream;
 //import java.io.BufferedReader;
 //import java.io.InputStreamReader;

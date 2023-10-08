@@ -11,12 +11,12 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class SpawnedWindow extends JFrame implements NativeKeyListener {
+public class ScreenshotWindow extends JFrame implements NativeKeyListener {
     private MainWindow mainWindow;
 
     private Point initialClick;
 
-    public SpawnedWindow(MainWindow mainWindow, ScreenshotInfo screenshotInfo) {
+    public ScreenshotWindow(MainWindow mainWindow, ScreenshotInfo screenshotInfo) {
         super("Spawned Window");
 
         GlobalScreen.addNativeKeyListener(this);

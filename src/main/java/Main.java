@@ -1,3 +1,5 @@
+//Gammal kod för att testa externa tjänsterna
+
 //import app.jackychu.api.simplegoogletranslate.Language;
 //import app.jackychu.api.simplegoogletranslate.SimpleGoogleTranslate;
 //import net.sourceforge.tess4j.Tesseract;
