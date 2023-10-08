@@ -29,6 +29,8 @@ public class MainWindow extends JFrame implements NativeKeyListener {
     private TranslateService translateService = new TranslateService();
     private OcrService ocrService = new OcrService();
 
+    private ImageService imageService = new ImageService();
+
     private ConfigService configService = new ConfigService();
 
 
@@ -88,7 +90,7 @@ public class MainWindow extends JFrame implements NativeKeyListener {
             }
             Rectangle area = screenshotInfo.toRectangle(); // specify the area
             BufferedImage bufferedImage = robot.createScreenCapture(area);
-            BufferedImage blackWhiteImage = ImageService.convertToBlackAndWhite(bufferedImage);
+            BufferedImage blackWhiteImage = imageService.convertToBlackAndWhite(bufferedImage);
             String ocrText = ocrService.performOcr(blackWhiteImage);
             ArrayList<String> translatedText = translateService.translate(ocrText, Language.tr, (Language) languageDropdown.getSelectedItem());
 

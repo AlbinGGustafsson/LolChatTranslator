@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ImageService {
-    public static BufferedImage convertToBlackAndWhite(BufferedImage colorImage) {
+    public BufferedImage convertToBlackAndWhite(BufferedImage colorImage) {
         // Check if the input image is null
         if (colorImage == null) {
             throw new IllegalArgumentException("Input image cannot be null");
