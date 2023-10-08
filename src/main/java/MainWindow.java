@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.rmi.dgc.Lease;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,12 @@ public class MainWindow extends JFrame implements NativeKeyListener {
     private static ScreenshotInfo screenshotInfo;
 
     private JTextArea textArea;
+
+    TranslateService translateService = new TranslateService();
+    OcrService ocrService = new OcrService();
+
+    ConfigService configService = new ConfigService();
+
 
     public MainWindow() {
         super("Main Window");
@@ -71,6 +78,7 @@ public class MainWindow extends JFrame implements NativeKeyListener {
     private void translate() {
 
         SwingUtilities.invokeLater(() -> {
+
             Robot robot = null;
             try {
                 robot = new Robot();
@@ -79,47 +87,66 @@ public class MainWindow extends JFrame implements NativeKeyListener {
             }
             Rectangle area = screenshotInfo.toRectangle(); // specify the area
             BufferedImage bufferedImage = robot.createScreenCapture(area);
-
-            tesseract.setDatapath("tessdata");
-            tesseract.setLanguage("tur+eng");
-
             BufferedImage blackWhiteImage = ImageService.convertToBlackAndWhite(bufferedImage);
-
-            String text = null;
-            try {
-                text = tesseract.doOCR(blackWhiteImage);
-            } catch (TesseractException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            String[] textArray = text.split("\n");
-            ArrayList<String> resultList = new ArrayList<>();
-
-
-            for (String line : textArray) {
-
-                try {
-
-                    String result = translate.doTranslate(Language.tr, Language.sv, line);
-                    resultList.add(result);
-
-                } catch (IOException | InterruptedException ex) {
-                    System.out.println(line + " could not be translated");
-                }
-            }
-
-            ArrayList<String> swedishSentences = extractSwedishText(resultList);
-            textArea.setText("");
-
-            for (String line : swedishSentences) {
+            String ocrText = ocrService.performOcr(bufferedImage);
+            ArrayList<String> translatedText = translateService.translate(ocrText, Language.tr, Language.sv);
+            for (String line : translatedText) {
                 textArea.append(line + "\n");
             }
             pack();
+
+
+
         });
+
+//        SwingUtilities.invokeLater(() -> {
+//            Robot robot = null;
+//            try {
+//                robot = new Robot();
+//            } catch (AWTException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//            Rectangle area = screenshotInfo.toRectangle(); // specify the area
+//            BufferedImage bufferedImage = robot.createScreenCapture(area);
+//
+//            tesseract.setDatapath("tessdata");
+//            tesseract.setLanguage("tur+eng");
+//
+//            BufferedImage blackWhiteImage = ImageService.convertToBlackAndWhite(bufferedImage);
+//
+//            String text = null;
+//            try {
+//                text = tesseract.doOCR(blackWhiteImage);
+//            } catch (TesseractException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//
+//            String[] textArray = text.split("\n");
+//            ArrayList<String> resultList = new ArrayList<>();
+//
+//            for (String line : textArray) {
+//
+//                try {
+//                    String result = translate.doTranslate(Language.tr, Language.sv, line);
+//                    resultList.add(result);
+//
+//                } catch (IOException | InterruptedException ex) {
+//                    System.out.println(line + " could not be translated");
+//                }
+//            }
+//
+//            ArrayList<String> swedishSentences = extractResult(resultList);
+//            textArea.setText("");
+//
+//            for (String line : swedishSentences) {
+//                textArea.append(line + "\n");
+//            }
+//            pack();
+//        });
 
     }
 
-    public static ArrayList<String> extractSwedishText(ArrayList<String> inputList) {
+    public static ArrayList<String> extractResult(ArrayList<String> inputList) {
         ArrayList<String> sentences = new ArrayList<>();
 
         for (String line : inputList) {
