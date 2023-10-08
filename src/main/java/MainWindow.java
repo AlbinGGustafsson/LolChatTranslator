@@ -36,7 +36,7 @@ public class MainWindow extends JFrame implements NativeKeyListener {
 
         counterLabel = new JLabel();
         label = new JLabel("Size and Location Info Here");
-        JButton button = new JButton("Spawn Window");
+        JButton button = new JButton("Select screenshot dimensions");
         textArea = new JTextArea();
         button2 = new JButton("Translate");
         button2.setEnabled(false);
@@ -51,8 +51,8 @@ public class MainWindow extends JFrame implements NativeKeyListener {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SpawnedWindow spawnedWindow = new SpawnedWindow(MainWindow.this, screenshotInfo);
-                spawnedWindow.setVisible(true);
+                ScreenshotWindow screenshotWindow = new ScreenshotWindow(MainWindow.this, screenshotInfo);
+                screenshotWindow.setVisible(true);
             }
         });
 
@@ -83,7 +83,7 @@ public class MainWindow extends JFrame implements NativeKeyListener {
             tesseract.setDatapath("tessdata");
             tesseract.setLanguage("tur+eng");
 
-            BufferedImage blackWhiteImage = BlackAndWhiteConverter.convertToBlackAndWhite(bufferedImage);
+            BufferedImage blackWhiteImage = ImageService.convertToBlackAndWhite(bufferedImage);
 
             String text = null;
             try {

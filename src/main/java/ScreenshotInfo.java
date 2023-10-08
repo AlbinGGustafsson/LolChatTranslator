@@ -7,7 +7,6 @@ public class ScreenshotInfo {
     private int width;
     private int height;
 
-
     public ScreenshotInfo(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
