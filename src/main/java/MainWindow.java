@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 
 public class MainWindow extends JFrame implements NativeKeyListener {
 
+    private JLabel languageLabel;
+    private JComboBox<Language> languageDropdown;
     private JLabel screenshotInfoLabel;
     private JButton translateButton;
 
@@ -31,13 +33,20 @@ public class MainWindow extends JFrame implements NativeKeyListener {
 
 
     public MainWindow() {
-        super("Main Window");
+        super("Translate");
 
         screenshotInfoLabel = new JLabel("Size and Location Info Here");
-        screenshotInfoButton= new JButton("Select screenshot dimensions");
+        screenshotInfoButton = new JButton("Select screenshot dimensions");
         translatedTextArea = new JTextArea();
         translateButton = new JButton("Translate");
         translateButton.setEnabled(false);
+
+        // Create a dropdown with "Swedish" and "English" as options
+        Language[] languages = {Language.en, Language.sv};
+        languageDropdown = new JComboBox<>(languages);
+
+        // Create and add a label before the dropdown
+        languageLabel = new JLabel("Translate to: ");
 
         translateButton.addActionListener(new ActionListener() {
             @Override
@@ -58,6 +67,8 @@ public class MainWindow extends JFrame implements NativeKeyListener {
         add(translateButton);
         add(screenshotInfoButton);
         add(screenshotInfoLabel);
+        add(languageLabel); // Add the new label to the layout
+        add(languageDropdown); // Add the dropdown to the layout
         add(translatedTextArea);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 100);
@@ -78,8 +89,11 @@ public class MainWindow extends JFrame implements NativeKeyListener {
             Rectangle area = screenshotInfo.toRectangle(); // specify the area
             BufferedImage bufferedImage = robot.createScreenCapture(area);
             BufferedImage blackWhiteImage = ImageService.convertToBlackAndWhite(bufferedImage);
-            String ocrText = ocrService.performOcr(bufferedImage);
-            ArrayList<String> translatedText = translateService.translate(ocrText, Language.tr, Language.sv);
+            String ocrText = ocrService.performOcr(blackWhiteImage);
+            ArrayList<String> translatedText = translateService.translate(ocrText, Language.tr, (Language) languageDropdown.getSelectedItem());
+
+
+            translatedTextArea.setText("");
             for (String line : translatedText) {
                 translatedTextArea.append(line + "\n");
             }
